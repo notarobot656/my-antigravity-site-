@@ -1,0 +1,1 @@
+So this is to calculate whether number is prime or not and it have some advance feature like goldbach partition ,coprimality & gcd ,special prime numbers etc ,its cool or some fun feature  is it animation which in clude fighter jet flying and dropping bomb and make sound effect and it have background with some mathematical sign all some other feature 
