@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroPrime // Supersonic Prime Number Intelligence</title>
+  <meta name="description" content="High-precision prime number verification, prime factorization, and divisor intelligence with aerospace HUD aesthetics.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Fullscreen Jet Flyby Canvas & Container -->
+  <div id="flyby-stage" class="flyby-stage" aria-hidden="true">
+    <canvas id="trail-canvas"></canvas>
+    <div id="fighter-jet" class="fighter-jet">
+      <!-- High-fidelity Supersonic Fighter Jet SVG (Facing Left) -->
+      <svg class="jet-svg" viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="fuselageGrad" x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#1e293b"/>
+            <stop offset="40%" stop-color="#334155"/>
+            <stop offset="80%" stop-color="#64748b"/>
+            <stop offset="100%" stop-color="#94a3b8"/>
+          </linearGradient>
+          <linearGradient id="afterburnerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="25%" stop-color="#38bdf8"/>
+            <stop offset="60%" stop-color="#ff5e3a"/>
+            <stop offset="100%" stop-color="rgba(255, 60, 0, 0)"/>
+          </linearGradient>
+          <filter id="jetGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="5" result="blur"/>
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+          </filter>
+        </defs>
+
+        <!-- Twin Afterburners (Right Side of Jet / Exhaust) -->
+        <g class="afterburner-flames">
+          <ellipse cx="285" cy="74" rx="45" ry="10" fill="url(#afterburnerGrad)" filter="url(#jetGlow)" class="flame-pulse"/>
+          <ellipse cx="285" cy="106" rx="45" ry="10" fill="url(#afterburnerGrad)" filter="url(#jetGlow)" class="flame-pulse"/>
+          <ellipse cx="270" cy="74" rx="20" ry="5" fill="#ffffff" filter="url(#jetGlow)"/>
+          <ellipse cx="270" cy="106" rx="20" ry="5" fill="#ffffff" filter="url(#jetGlow)"/>
+        </g>
+
+        <!-- Main Wing Delta Structure -->
+        <path d="M250,90 L210,10 L160,10 L120,65 L260,90 Z" fill="#1e293b" stroke="#00f2fe" stroke-width="1.5" stroke-opacity="0.6"/>
+        <path d="M250,90 L210,170 L160,170 L120,115 L260,90 Z" fill="#1e293b" stroke="#00f2fe" stroke-width="1.5" stroke-opacity="0.6"/>
+
+        <!-- Wing Panels & Accents -->
+        <polygon points="200,20 165,20 135,62 170,62" fill="#334155" opacity="0.8"/>
+        <polygon points="200,160 165,160 135,118 170,118" fill="#334155" opacity="0.8"/>
+
+        <!-- Horizontal Stabilizers / Elevators -->
+        <polygon points="275,85 285,45 255,45 245,85" fill="#0f172a" stroke="#38bdf8" stroke-width="1"/>
+        <polygon points="275,95 285,135 255,135 245,95" fill="#0f172a" stroke="#38bdf8" stroke-width="1"/>
+
+        <!-- Main Fuselage Body (Pointing Left towards (20, 90)) -->
+        <path d="M20,90 Q70,72 170,68 L260,70 L260,110 L170,112 Q70,108 20,90 Z" fill="url(#fuselageGrad)" stroke="#64748b" stroke-width="1.5"/>
+
+        <!-- Cockpit Canopy (Glowing Cyan Visor) -->
+        <path d="M65,90 Q95,80 135,80 Q115,90 135,100 Q95,100 65,90 Z" fill="#00f2fe" opacity="0.95" filter="url(#jetGlow)"/>
+        <ellipse cx="90" cy="90" rx="18" ry="4" fill="#ffffff" opacity="0.75"/>
+
+        <!-- Twin Vertical Tailfins -->
+        <polygon points="220,70 250,55 260,55 240,70" fill="#0284c7" opacity="0.9"/>
+        <polygon points="220,110 250,125 260,125 240,110" fill="#0284c7" opacity="0.9"/>
+
+        <!-- Nose Sensor & Pitot Tube -->
+        <line x1="20" y1="90" x2="2" y2="90" stroke="#00f2fe" stroke-width="2.5"/>
+        <circle cx="2" cy="90" r="2" fill="#ffffff"/>
+      </svg>
+    </div>
+
+    <!-- Sonic Boom Shockwave Ring -->
+    <div id="shockwave" class="shockwave"></div>
+  </div>
+
+  <!-- Ambient Prime & Mathematical Symbols Constellation Layer -->
+  <div class="math-ambient-layer" aria-hidden="true">
+    <span class="math-glyph g1">ℙ</span>
+    <span class="math-glyph g2">π(x) ∼ x/ln(x)</span>
+    <span class="math-glyph g3">p ∈ ℙ</span>
+    <span class="math-glyph g4">∑ 1/nˢ</span>
+    <span class="math-glyph g5">√n</span>
+    <span class="math-glyph g6">6k ± 1</span>
+    <span class="math-glyph g7">∏ (1-p⁻ˢ)⁻¹</span>
+    <span class="math-glyph g8">Mₚ = 2ᵖ − 1</span>
+    <span class="math-glyph g9">a ≡ b (mod m)</span>
+    <span class="math-glyph g10">d ∣ n</span>
+    <span class="math-glyph g11">∞</span>
+    <span class="math-glyph g12">∫</span>
+    <span class="math-glyph g13">gcd(a,b)=1</span>
+    <span class="math-glyph g14">x² + y²</span>
+  </div>
+
+  <!-- Main HUD Application Wrapper -->
+  <div class="hud-app" id="hud-app">
+    
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <!-- Left: User Callsign Badge -->
+      <div class="user-badge" id="user-badge" title="Click name to customize callsign">
+        <div class="pilot-icon-ring">
+          <svg class="pilot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/>
+            <path d="M3 20a9 9 0 0 1 18 0"/>
+            <circle cx="12" cy="11" r="1.5" fill="#00f2fe"/>
+          </svg>
+          <span class="telemetry-beacon"></span>
+        </div>
+        <div class="pilot-meta">
+          <span class="pilot-label">PILOT CALLSIGN // LVL-1</span>
+          <span class="pilot-name" id="pilot-name" contenteditable="true" spellcheck="false">Commander Maverick</span>
+        </div>
+      </div>
+
+      <!-- Center Logo / Radar Tag -->
+      <div class="hud-brand">
+        <div class="radar-sweep"></div>
+        <span class="brand-text">AEROPRIME <span class="math-brand-sym">ℙ</span> <span class="brand-sub">TACTICAL INTEL</span></span>
+      </div>
+
+      <!-- Right: Action Controls -->
+      <div class="nav-controls">
+        <button id="btn-sound-toggle" class="control-btn active" title="Toggle supersonic jet sound">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span id="sound-label">AUDIO: ON</span>
+        </button>
+
+        <button id="btn-jet-sound" class="control-btn jet-audio-btn" title="Trigger instant supersonic jet roar & sonic boom">
+          <span>⚡ JET ROAR</span>
+        </button>
+
+        <button id="btn-replay" class="control-btn replay-btn" title="Replay fighter jet flyby animation with sound">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+          <span>FLYBY & ROAR</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      
+      <!-- Mission / Headline -->
+      <section class="hero-section">
+        <div class="status-chip">
+          <span class="chip-pulse"></span>
+          <span>SYSTEM ONLINE // SUPERSONIC PRIME ANALYSIS</span>
+        </div>
+        <h1 class="hero-title">
+          <span class="math-title-sym">ℙ</span> Prime Number Intelligence <span class="math-title-sym">√x</span>
+        </h1>
+        
+        <!-- Mathematical Formula Banner -->
+        <div class="math-formula-ribbon">
+          <span class="ribbon-item"><strong>Set Notation:</strong> ℙ = { p ∈ ℕ : |Div(p)| = 2 }</span>
+          <span class="ribbon-divider">•</span>
+          <span class="ribbon-item"><strong>Prime Theorem:</strong> π(x) ≈ x / ln(x)</span>
+          <span class="ribbon-divider">•</span>
+          <span class="ribbon-item"><strong>Coprime Form:</strong> 6k ± 1</span>
+        </div>
+
+        <p class="hero-desc">
+          Enter any integer to execute real-time primality verification, canonical factor decomposition (∏ pᵢᵉⁱ), and arithmetic topology analysis.
+        </p>
+      </section>
+
+      <!-- Central Search / Input Console -->
+      <section class="console-section">
+        <form id="prime-form" class="input-form" onsubmit="return false;">
+          <div class="input-console-box">
+            <div class="input-symbol" title="Prime Set Symbol (Blackboard Bold P)">ℙ</div>
+            <input 
+              type="text" 
+              id="prime-input" 
+              class="prime-input" 
+              placeholder="Enter an integer (e.g. 7919, 104729)..." 
+              autocomplete="off" 
+              inputmode="numeric"
+              required
+            >
+            <button type="submit" id="btn-analyze" class="analyze-btn">
+              <span class="btn-text">ANALYZE NUMBER</span>
+              <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- Quick Sample Presets -->
+        <div class="preset-chips">
+          <span class="presets-label">QUICK TARGETS:</span>
+          <button type="button" class="preset-chip" data-num="2">2 (Smallest Prime)</button>
+          <button type="button" class="preset-chip" data-num="17">17 (Twin Prime)</button>
+          <button type="button" class="preset-chip" data-num="91">91 (7 × 13 Trap)</button>
+          <button type="button" class="preset-chip" data-num="997">997 (Largest 3-Digit)</button>
+          <button type="button" class="preset-chip" data-num="7919">7,919 (1000th Prime)</button>
+          <button type="button" class="preset-chip" data-num="104729">104,729</button>
+          <button type="button" class="preset-chip" data-num="2026">2026 (Year)</button>
+        </div>
+      </section>
+
+      <!-- Analysis Results Dashboard -->
+      <section id="results-dashboard" class="results-dashboard hidden">
+        
+        <!-- Primary Verdict Banner -->
+        <div id="verdict-card" class="verdict-card">
+          <div class="verdict-header">
+            <div class="verdict-badge" id="verdict-badge">VERDICT</div>
+            <div class="analyzed-number-display" id="analyzed-display">7919</div>
+          </div>
+          <h2 class="verdict-headline" id="verdict-headline">7919 is a PRIME NUMBER</h2>
+          <p class="verdict-explanation" id="verdict-explanation">
+            It possesses precisely two distinct positive divisors: 1 and itself.
+          </p>
+        </div>
+
+        <!-- Telemetry Breakdown Cards Grid -->
+        <div class="intel-grid">
+          
+          <!-- Card 1: Factorization -->
+          <div class="intel-card">
+            <div class="card-header">
+              <span class="card-icon">⚡</span>
+              <span class="card-title">CANONICAL FACTORIZATION</span>
+            </div>
+            <div class="card-value formula-display" id="factorization-display">7919¹</div>
+            <div class="card-footer" id="factorization-notes">Prime decomposition format</div>
+          </div>
+
+          <!-- Card 2: Divisors Count -->
+          <div class="intel-card">
+            <div class="card-header">
+              <span class="card-icon">📊</span>
+              <span class="card-title">TOTAL DIVISORS</span>
+            </div>
+            <div class="card-value" id="divisors-count-display">2</div>
+            <div class="card-footer divisors-list-text" id="divisors-list-display">Divisors: 1, 7919</div>
+          </div>
+
+          <!-- Card 3: Adjacent Primes -->
+          <div class="intel-card">
+            <div class="card-header">
+              <span class="card-icon">🛰️</span>
+              <span class="card-title">PRIME NEIGHBORHOOD</span>
+            </div>
+            <div class="neighbors-row">
+              <div class="neighbor-box">
+                <span class="neighbor-lbl">PREVIOUS PRIME</span>
+                <span class="neighbor-val" id="prev-prime-display">7907</span>
+              </div>
+              <div class="neighbor-divider">⟷</div>
+              <div class="neighbor-box">
+                <span class="neighbor-lbl">NEXT PRIME</span>
+                <span class="neighbor-val" id="next-prime-display">7927</span>
+              </div>
+            </div>
+            <div class="card-footer" id="gap-notes">Prime gap: 20 units</div>
+          </div>
+
+          <!-- Card 4: Properties & Parity -->
+          <div class="intel-card">
+            <div class="card-header">
+              <span class="card-icon">🛡️</span>
+              <span class="card-title">ARITHMETIC METRICS</span>
+            </div>
+            <ul class="properties-list" id="properties-list">
+              <li><span>Parity:</span> <strong id="prop-parity">Odd</strong></li>
+              <li><span>Classification:</span> <strong id="prop-class">Deficient Number</strong></li>
+              <li><span>Digit Sum:</span> <strong id="prop-digitsum">26</strong></li>
+              <li><span>Square:</span> <strong id="prop-square">62,710,561</strong></li>
+            </ul>
+          </div>
+
+        </div>
+
+      <!-- Tactical Prime Mathematical Toolkit -->
+      <section class="toolkit-section">
+        <div class="toolkit-header">
+          <div class="toolkit-badge">
+            <span class="chip-pulse"></span>
+            <span>ADVANCED ARITHMETIC SUITE</span>
+          </div>
+          <h2 class="toolkit-title"><span class="math-title-sym">∑</span> Prime Mathematical Toolkit <span class="math-title-sym">π(x)</span></h2>
+          <p class="toolkit-desc">Specialized cryptographic, partition, and range intelligence tools for prime number theory.</p>
+        </div>
+
+        <!-- Toolkit Tab Navigation -->
+        <div class="toolkit-tabs" role="tablist">
+          <button class="toolkit-tab active" data-tab="sieve" role="tab" id="tab-sieve">
+            <span class="tab-icon">🔢</span>
+            <span>Range Sieve & π(x)</span>
+          </button>
+          <button class="toolkit-tab" data-tab="goldbach" role="tab" id="tab-goldbach">
+            <span class="tab-icon">⚖️</span>
+            <span>Goldbach Partition (2n = p₁+p₂)</span>
+          </button>
+          <button class="toolkit-tab" data-tab="coprime" role="tab" id="tab-coprime">
+            <span class="tab-icon">🔏</span>
+            <span>Coprimality & gcd(a,b)</span>
+          </button>
+          <button class="toolkit-tab" data-tab="special" role="tab" id="tab-special">
+            <span class="tab-icon">🌌</span>
+            <span>Special Prime Classes</span>
+          </button>
+        </div>
+
+        <!-- Tab Panels Container -->
+        <div class="toolkit-panels">
+
+          <!-- Panel 1: Sieve of Eratosthenes & Prime Counting -->
+          <div class="toolkit-panel active" id="panel-sieve">
+            <div class="panel-inner">
+              <div class="tool-controls">
+                <div class="range-inputs">
+                  <div class="input-field">
+                    <label for="sieve-start">START RANGE (A)</label>
+                    <input type="number" id="sieve-start" value="1" min="1" max="100000">
+                  </div>
+                  <div class="input-field">
+                    <label for="sieve-end">END RANGE (B)</label>
+                    <input type="number" id="sieve-end" value="100" min="2" max="100000">
+                  </div>
+                </div>
+                <button type="button" id="btn-run-sieve" class="tool-action-btn">GENERATE SIEVE [A, B]</button>
+              </div>
+
+              <div class="sieve-stats-bar">
+                <div class="stat-item">
+                  <span class="stat-label">COUNT π(B) − π(A−1):</span>
+                  <span class="stat-value" id="sieve-count">25 primes</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">DENSITY:</span>
+                  <span class="stat-value" id="sieve-density">25.0%</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">MAX GAP:</span>
+                  <span class="stat-value" id="sieve-max-gap">8 units</span>
+                </div>
+              </div>
+
+              <div class="sieve-output-box">
+                <div class="sieve-chips-grid" id="sieve-chips-grid"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 2: Goldbach Conjecture -->
+          <div class="toolkit-panel" id="panel-goldbach">
+            <div class="panel-inner">
+              <p class="tool-info-text">
+                <strong>Goldbach's Strong Conjecture:</strong> Every even integer greater than 2 can be expressed as the sum of two prime numbers (<strong>2n = p₁ + p₂</strong>).
+              </p>
+              <div class="tool-controls">
+                <div class="input-field wide">
+                  <label for="goldbach-input">ENTER EVEN NUMBER (2n > 2)</label>
+                  <input type="number" id="goldbach-input" value="100" min="4" step="2">
+                </div>
+                <button type="button" id="btn-run-goldbach" class="tool-action-btn">FIND PRIME PARTITIONS</button>
+              </div>
+
+              <div class="goldbach-results" id="goldbach-results"></div>
+            </div>
+          </div>
+
+          <!-- Panel 3: Coprimality & GCD -->
+          <div class="toolkit-panel" id="panel-coprime">
+            <div class="panel-inner">
+              <p class="tool-info-text">
+                Two integers a and b are <strong>coprime (relatively prime)</strong> if and only if <strong>gcd(a, b) = 1</strong>. Fundamental for RSA public-key encryption.
+              </p>
+              <div class="tool-controls">
+                <div class="range-inputs">
+                  <div class="input-field">
+                    <label for="coprime-a">INTEGER A</label>
+                    <input type="number" id="coprime-a" value="35">
+                  </div>
+                  <div class="input-field">
+                    <label for="coprime-b">INTEGER B</label>
+                    <input type="number" id="coprime-b" value="64">
+                  </div>
+                </div>
+                <button type="button" id="btn-run-coprime" class="tool-action-btn">TEST COPRIMALITY</button>
+              </div>
+
+              <div class="coprime-verdict-box" id="coprime-verdict-box"></div>
+            </div>
+          </div>
+
+          <!-- Panel 4: Special Prime Classes -->
+          <div class="toolkit-panel" id="panel-special">
+            <div class="panel-inner">
+              <p class="tool-info-text">
+                Evaluate whether a number belongs to special prime families: <strong>Twin Primes</strong> (p ± 2), <strong>Cousin Primes</strong> (p ± 4), <strong>Sophie Germain Primes</strong> (2p + 1 ∈ ℙ), or <strong>Mersenne Primes</strong> (2ᵖ − 1).
+              </p>
+              <div class="tool-controls">
+                <div class="input-field wide">
+                  <label for="special-input">TARGET NUMBER</label>
+                  <input type="number" id="special-input" value="17">
+                </div>
+                <button type="button" id="btn-run-special" class="tool-action-btn">EVALUATE PRIME FAMILIES</button>
+              </div>
+
+              <div class="special-classes-grid" id="special-classes-grid"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Tactical Footer -->
+    <footer class="hud-footer">
+      <span>AEROPRIME INTEL // RECON DIVISION</span>
+      <span>ENCRYPTED SECURE MATH HUD // 60 FPS ACCELERATED</span>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
